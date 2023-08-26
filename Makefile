@@ -1,17 +1,21 @@
-GCC = gcc
-SRCS = /src/main.c
-HEADER = 
-OBJS = ${SRCS:.c=.o}
-NAME = ft_nm
+CC = clang
 CFLAGS = -Wall -Wextra -Werror
 
-.c.o:
-	${GCC} ${CFLAGS} -c $< -o ${<:.c=.o}
+NAME = ft_nm
 
-${NAME}: ${OBJS}
-	${GCC} ${CFLAGS} -o ${NAME} ${OBJS}
+SRCS = src/main.c
+HEADER = include/include.h 
+
+OBJS = ${SRCS:.c=.o}
+
+.c.o:
+	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 all: ${NAME}
+
+${NAME}: ${OBJS}
+	${CC} ${CFLAGS} -o ${NAME} ${OBJS}
+
 
 clean:
 	@rm -f ${OBJS}
