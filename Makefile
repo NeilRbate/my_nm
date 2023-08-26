@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = ft_nm
 
 SRCS = src/main.c
-HEADER = libft/libft.a 
+LIBFT = -L. libft/libft.a 
 
 OBJS = ${SRCS:.c=.o}
 
@@ -15,7 +15,7 @@ all: ${NAME}
 
 ${NAME}: ${OBJS}
 	@make -C libft all
-	@${CC} ${CFLAGS} -o ${NAME} ${HEADER} ${OBJS}
+	${CC} ${CFLAGS} ${OBJS} ${LIBFT} -o ${NAME}
 
 
 clean:
