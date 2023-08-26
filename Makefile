@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = ft_nm
 
 SRCS = src/main.c
-HEADER = include/include.h 
+HEADER = libft/libft.a 
 
 OBJS = ${SRCS:.c=.o}
 
@@ -14,15 +14,17 @@ OBJS = ${SRCS:.c=.o}
 all: ${NAME}
 
 ${NAME}: ${OBJS}
-	${CC} ${CFLAGS} -o ${NAME} ${OBJS}
+	@make -C libft all
+	@${CC} ${CFLAGS} -o ${NAME} ${HEADER} ${OBJS}
 
 
 clean:
 	@rm -f ${OBJS}
-	@echo Everything is clean
+	@make -C libft clean
 
-fclean:
+fclean: clean
 	@rm -f ${NAME}
+	@make -C libft clean
 
 re: fclean all
 
