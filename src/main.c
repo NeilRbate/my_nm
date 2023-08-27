@@ -1,18 +1,28 @@
 #include "../include/include.h"
 
+void	putInvalidOption(char *option)
+{
+	ft_putstr_fd("invalid option -- '", STDERR);
+	if (option)
+		ft_putstr_fd(option, STDERR);
+	ft_putendl_fd("'", STDERR);
+	ft_putendl_fd("Usage: ft_nm [option(s)] [file(s)]", STDERR);
+}
+
+void	putError(char *errorMessage)
+{
+	if (errorMessage) {
+		ft_putstr_fd("nm: ", STDERR);
+		ft_putendl_fd(errorMessage, STDERR);
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	nm	nmFile;
 
-	initNmFile(&nmFile, argc);
-	if (argc < 2) {
-		if ((nmFile.fd = open("a.out", O_RDONLY)) < 0) {
-			ft_putendl_fd("nm: a.out: No Such File", STDERR);
-			return(EXIT_FAILURE);
-		}
-		//Goto function to run
-	}
-	ft_putendl_fd(argv[0], STDOUT);
+	initNmFile(&nmFile, argc, argv);
+	argControl(&nmFile);
 
 	return (0);
 }

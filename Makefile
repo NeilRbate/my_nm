@@ -3,7 +3,9 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = ft_nm
 
-SRCS = src/main.c
+SRCS = src/main.c \
+       src/init.c \
+       src/parser.c
 LIBFT = -L. libft/libft.a 
 
 OBJS = ${SRCS:.c=.o}

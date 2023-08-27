@@ -55,32 +55,57 @@
  *  -r
  *  -p
  */
-#define A_OPT	1
-#define G_OPT	2
-#define U_OPT	3
-#define R_OPT	4
-#define P_OPT	5
+#define NO_OPT		0
+#define A_OPT		1
+#define G_OPT		2
+#define U_OPT		3
+#define R_OPT		4
+#define P_OPT		5
+#define INVALID_OPT	6
 
 
 typedef struct {
 
 	int	fd;
 	int 	nbArgs;
+	int	flags;
 	char	*fileName;
-	char	*flags;
 	char	**args;
 
 }		nm;
 
 /*############################FUNCTION ZONE##############################*/
 
+/*
+ * This function is use to send a personnal error message
+ * dir:
+ * 	src/main.c
+ */
+void	putError(char *errorMessage);
+
+/*
+ * This function is use to send an error when an option is invalid
+ * dir: 
+ * 	src/main.c
+ */
+void	putInvalidOption(char *option);
 
 /*
  * This function init the struct nm on launch
  * dir:
  * 	src/init.c
  */
+void	initNmFile(nm *nmFile, int argc, char **argv);
 
-void	initNmFile(nm *nmFile, int argc);
+/*
+ * This function control arguments (number, options, valid file..)
+ * Own error message is print by itself, no need to catch error nb
+ * dir:
+ * 	src/parser.c
+ * return value:
+ * 	FALSE if they ar a problem on args
+ * 	True if everything is ok
+ */
+int	argControl(nm *nmFile);
 
 #endif
