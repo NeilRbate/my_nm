@@ -41,11 +41,46 @@
 
 /*############################DEFINE ZONE##############################*/
 
-#define TRUE 1
-#define FALSE 0
+#define TRUE	1
+#define FALSE	0
 
-#define STDOUT 1
-#define STDERR 2
+#define STDOUT	1
+#define STDERR	2
 
+/*
+ * Flag for all option on bonus part
+ *  -a
+ *  -g
+ *  -u
+ *  -r
+ *  -p
+ */
+#define A_OPT	1
+#define G_OPT	2
+#define U_OPT	3
+#define R_OPT	4
+#define P_OPT	5
+
+
+typedef struct {
+
+	int	fd;
+	int 	nbArgs;
+	char	*fileName;
+	char	*flags;
+	char	**args;
+
+}		nm;
+
+/*############################FUNCTION ZONE##############################*/
+
+
+/*
+ * This function init the struct nm on launch
+ * dir:
+ * 	src/init.c
+ */
+
+void	initNmFile(nm *nmFile, int argc);
 
 #endif
