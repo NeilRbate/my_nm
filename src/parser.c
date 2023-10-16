@@ -19,11 +19,11 @@ int	optionsControl(nm *nmFile, char *arg)
 	} else if (ft_strncmp(arg, "-p", 3) == 0) {
 		nmFile->flags = P_OPT;
 		goto ret;
-	} else {
-		nmFile->flags = INVALID_OPT;
-		putInvalidOption(arg);
-		return (FALSE);
 	}
+
+	nmFile->flags = INVALID_OPT;
+	putInvalidOption(arg);
+	return (FALSE);
 
 ret:
 	return (TRUE);

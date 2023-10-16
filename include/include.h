@@ -108,4 +108,16 @@ void	initNmFile(nm *nmFile, int argc, char **argv);
  */
 int	argControl(nm *nmFile);
 
+/*
+ * This function control the opening status of file
+ * Own error message is print by itself, no need to catch error nb
+ * dir:
+ * 	src/tools.c
+ *
+ * return value:
+ * 	-1 if some issue with the fd
+ * 	fd nb if opening correctly
+ */
+int	openFile(char *filename);
+
 #endif

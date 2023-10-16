@@ -22,7 +22,13 @@ int	main(int argc, char **argv)
 	nm	nmFile;
 
 	initNmFile(&nmFile, argc, argv);
-	argControl(&nmFile);
+	if (!argControl(&nmFile))
+		goto error;
+	if (openFile(argv[1]) == -1)
+		goto error;
 
 	return (0);
+
+error:
+	return (1);
 }
