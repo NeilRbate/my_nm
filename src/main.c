@@ -17,18 +17,25 @@ void	putError(char *errorMessage)
 	}
 }
 
+#include <stdio.h>
+
 int	main(int argc, char **argv)
 {
 	nm	nmFile;
 
+
 	initNmFile(&nmFile, argc, argv);
-	if (!argControl(&nmFile))
-		goto error;
-	if (openFile(argv[1]) == -1)
-		goto error;
+	if (argControl(&nmFile) == FALSE)
+		goto failure;
+	if ((nmFile.fd = openFile(argv[1])) == -1)
+		goto failure;
+	if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
+		goto failure;
+	//OK 
+		
 
 	return (0);
 
-error:
+failure:
 	return (1);
 }

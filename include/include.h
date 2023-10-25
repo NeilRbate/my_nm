@@ -41,8 +41,8 @@
 
 /*############################DEFINE ZONE##############################*/
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE	0X0000
+#define FALSE	0X1111
 
 #define STDOUT	1
 #define STDERR	2
@@ -66,11 +66,12 @@
 
 typedef struct {
 
-	int	fd;
-	int 	nbArgs;
-	int	flags;
-	char	*fileName;
-	char	**args;
+	int		fd;
+	int 		nbArgs;
+	int		flags;
+	char		*fileName;
+	char		**args;
+	struct stat	fileInfo;
 
 }		nm;
 
@@ -119,5 +120,20 @@ int	argControl(nm *nmFile);
  * 	fd nb if opening correctly
  */
 int	openFile(char *filename);
+
+/*
+ * This function is used to use fstat function on open fd
+ * Put data on *fileInfo past in arg
+ * Own error message is print by itself, no need to cath error bn
+ * dir:
+ * 	src/tools.c
+ *
+ * return value:
+ *	FALSE in failure
+ *	TRUE on success		
+ */
+ 
+
+int	fileInfo(int fd, struct stat *fileInfo);
 
 #endif
