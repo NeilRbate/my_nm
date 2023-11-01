@@ -29,6 +29,7 @@ ret:
 	return (TRUE);
 }
 
+//Control arguments
 int	argControl(nm *nmFile)
 {
 	if (nmFile->nbArgs < 2) {

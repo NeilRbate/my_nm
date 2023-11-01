@@ -23,16 +23,30 @@ int	main(int argc, char **argv)
 {
 	nm	nmFile;
 
-
+	//Init nmFile structure
 	initNmFile(&nmFile, argc, argv);
+
+	//Control arguments
 	if (argControl(&nmFile) == FALSE)
 		goto failure;
+
+	//Open file
 	if ((nmFile.fd = openFile(argv[1])) == -1)
 		goto failure;
+
+	//Grab fstat info from file
 	if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
 		goto failure;
-	//OK 
-		
+
+	//mmap the file
+	if((nmFile.mmapPtr = memoryMap(nmFile.fileInfo, nmFile.fd)) == MAP_FAILED)
+		goto failure;
+
+	for (int i = 0; i < nmFile.fileInfo.st_size; i++){
+		printf("%c", ((char *)nmFile.mmapPtr)[i]);
+	}
+
+
 
 	return (0);
 

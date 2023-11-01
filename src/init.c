@@ -7,4 +7,5 @@ void	initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->flags =		NO_OPT;
 	nmFile->nbArgs =	argc;
 	nmFile->args =		argv;
+	nmFile->mmapPtr =	NULL;
 }

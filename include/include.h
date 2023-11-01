@@ -72,8 +72,9 @@ typedef struct {
 	char		*fileName;
 	char		**args;
 	struct stat	fileInfo;
+	void		*mmapPtr;
 
-}		nm;
+}			nm;
 
 /*############################FUNCTION ZONE##############################*/
 
@@ -132,8 +133,19 @@ int	openFile(char *filename);
  *	FALSE in failure
  *	TRUE on success		
  */
- 
-
 int	fileInfo(int fd, struct stat *fileInfo);
+
+
+/*
+ * This function create the memory map from file point in filInfo struct
+ * Own error message is print by itself, no need to catch it
+ * dir:
+ * 	src/tools.c
+ * return value:
+ * 	??
+ * 	
+ */
+void	*memoryMap(struct stat fileInfo, int fd);
+
 
 #endif
