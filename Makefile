@@ -6,7 +6,8 @@ NAME = ft_nm
 SRCS = src/main.c \
        src/init.c \
        src/parser.c \
-       src/tools.c
+       src/tools.c \
+       src/elfcompute.c
 LIBFT = -L. libft/libft.a 
 
 OBJS = ${SRCS:.c=.o}

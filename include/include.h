@@ -38,6 +38,11 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+/*
+ * Include for ELF struct like Elf64_Ehdr ..
+ */
+#include <elf.h>
+
 
 /*############################DEFINE ZONE##############################*/
 
@@ -72,7 +77,7 @@ typedef struct {
 	char		*fileName;
 	char		**args;
 	struct stat	fileInfo;
-	void		*mmapPtr;
+	Elf64_Addr	*mmapPtr;
 
 }			nm;
 
@@ -146,6 +151,16 @@ int	fileInfo(int fd, struct stat *fileInfo);
  * 	
  */
 void	*memoryMap(struct stat fileInfo, int fd);
+
+/*
+ * This function compute the Elf validity test and execute the nm function
+ * dir:
+ * 	src/elfcompute.c
+ * return value:
+ * 	success 1
+ * 	failure 0
+ */
+int	computeElf(nm nmFile);
 
 
 #endif

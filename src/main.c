@@ -30,25 +30,30 @@ int	main(int argc, char **argv)
 	if (argControl(&nmFile) == FALSE)
 		goto failure;
 
-	//Open file
-	if ((nmFile.fd = openFile(argv[1])) == -1)
-		goto failure;
+	for (int i = 0; i < argc; i++) {
+		//Open file
+		if ((nmFile.fd = openFile(argv[1])) == -1)
+			goto failure;
+		//TODO check file name for each it and do it again
+		nmFile.fileName = argv[1];
 
-	//Grab fstat info from file
-	if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
-		goto failure;
-
-	//mmap the file
-	if((nmFile.mmapPtr = memoryMap(nmFile.fileInfo, nmFile.fd)) == MAP_FAILED)
-		goto failure;
-
-	for (int i = 0; i < nmFile.fileInfo.st_size; i++){
-		printf("%c", ((char *)nmFile.mmapPtr)[i]);
+		//Grab fstat info from file
+		if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
+			goto failure;
+	
+		//mmap the file
+		if((nmFile.mmapPtr = memoryMap(nmFile.fileInfo, nmFile.fd)) == MAP_FAILED)
+			goto failure;
+	
+		if (computeElf(nmFile) != 0)
+			goto clear_exit;
 	}
 
 
+return (0);
 
-	return (0);
+clear_exit:
+	munmap(nmFile.mmapPtr, nmFile.fileInfo.st_size);
 
 failure:
 	return (1);
