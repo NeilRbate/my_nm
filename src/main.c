@@ -17,8 +17,6 @@ void	putError(char *errorMessage)
 	}
 }
 
-#include <stdio.h>
-
 int	main(int argc, char **argv)
 {
 	nm	nmFile;
@@ -30,12 +28,13 @@ int	main(int argc, char **argv)
 	if (argControl(&nmFile) == FALSE)
 		goto failure;
 
-	for (int i = 0; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
+
 		//Open file
-		if ((nmFile.fd = openFile(argv[1])) == -1)
+		if ((nmFile.fd = openFile(argv[i])) < 0)
 			goto failure;
 		//TODO check file name for each it and do it again
-		nmFile.fileName = argv[1];
+		nmFile.fileName = argv[i];
 
 		//Grab fstat info from file
 		if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
@@ -47,13 +46,14 @@ int	main(int argc, char **argv)
 	
 		if (computeElf(nmFile) != 0)
 			goto clear_exit;
+		munmap(nmFile.mmapPtr, nmFile.fileInfo.st_size);
 	}
-
 
 return (0);
 
 clear_exit:
 	munmap(nmFile.mmapPtr, nmFile.fileInfo.st_size);
+	return (0);
 
 failure:
 	return (1);

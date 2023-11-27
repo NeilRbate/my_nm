@@ -32,16 +32,21 @@ ret:
 //Control arguments
 int	argControl(nm *nmFile)
 {
+	if(!nmFile)
+		goto failure;
+
 	if (nmFile->nbArgs < 2) {
 		if ((nmFile->fd = open("a.out", O_RDONLY)) < 0) {
 			putError("a.out: No such file");
-			return (FALSE);
+			goto failure;
 		}
 		//Goto file check
 	} else if (nmFile->nbArgs == 2) {
 		if (ft_strlen(nmFile->args[1]) >= 2 && ft_strncmp(nmFile->args[1], "-", 1) == 0)
 			if (optionsControl(nmFile, nmFile->args[1]) == FALSE)
-				return (FALSE);
+				goto failure;
 	}
 	return (TRUE);
+failure:
+	return (FALSE);
 }

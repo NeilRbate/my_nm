@@ -1,5 +1,6 @@
 CC = clang
-CFLAGS = -Wall -Wextra -Werror
+
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 NAME = ft_nm
 
@@ -28,7 +29,7 @@ clean:
 
 fclean: clean
 	@rm -f ${NAME}
-	@make -C libft clean
+	@make -C libft fclean
 
 re: fclean all
 
