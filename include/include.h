@@ -82,6 +82,9 @@ typedef struct {
 	Elf64_Shdr	*elf64SectionsPtr;
 	Elf32_Shdr	*elf32SectionsPtr;
 
+	Elf64_Ehdr	*elf64Ehdr;
+	Elf32_Ehdr	*elf32Ehdr;
+
 	Elf64_Sym	*elf64Symtab;
 	Elf32_Sym	*elf32Symtab;
 
@@ -190,5 +193,6 @@ int	halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
  * 	failure 1
  */
 int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile);
+
 
 #endif

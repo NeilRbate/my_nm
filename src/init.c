@@ -18,4 +18,6 @@ void	initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->elf32Symtab = 		NULL;
 	nmFile->elf64StrTab = 		NULL;
 	nmFile->elf32StrTab = 		NULL;
+	nmFile->elf64Ehdr = 		NULL;
+	nmFile->elf32Ehdr = 		NULL;
 }
