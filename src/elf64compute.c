@@ -5,15 +5,12 @@
 void	printSymtab(nm nmFile)
 {
 
-	for (size_t i = 0; i < 20; i++) {
-
-		printf("%s \n", (char *)nmFile.elf64Symtab[i].st_name);
-
+	for (size_t i = 0; i < nmFile.elf64Symtab->st_size; i++) {
+		printf("%d \n", nmFile.elf64Symtab[i].st_name);
 	}
 
-	/*
-	char *str = (char *) (nmFile.mmapPtr + elf_header->e_shoff);
 
+	/*
 	if (!str) return;
 
 	for (size_t i = 0; i < nmFile.elf64Symtab->st_size / sizeof(Elf64_Sym); i++) {
@@ -40,13 +37,18 @@ int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 			nmFile.elf64Symtab = (Elf64_Sym *)((char *)nmFile.mmapPtr \
 					+ nmFile.elf64SectionsPtr[i].sh_offset);
 		}
-		if (nmFile.elf64SectionsPtr[i].sh_type == SHT_STRTAB) {
-			printf("SHT_STRTAB find ! \n");
-			//nmFile.elf64StrTab = (ELF64_Shdr *)(
+
+		//TODO Refactor and check str, itś not the good way to doing that shit
+		if (nmFile.elf64SectionsPtr[i].sh_type == SHT_STRTAB && nmFile.elf64StrTab == NULL) {
+			if(ft_strcmp((char *) (nmFile.elf64SectionsPtr[i].sh_name + nmFile.mmapPtr),".strtab")==0) {
+				printf("SHT_STRTAB find ! \n");
+				nmFile.elf64StrTab = (Elf64_Shdr *)((char *)nmFile.mmapPtr \
+						+ nmFile.elf64SectionsPtr[i].sh_offset);
+			}
 		}
 	}
 
-	if (nmFile.elf64Symtab == NULL)
+	if (nmFile.elf64Symtab == NULL || nmFile.elf64StrTab == NULL)
 		goto failure;
 
 	printSymtab(nmFile);

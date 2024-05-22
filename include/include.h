@@ -78,9 +78,15 @@ typedef struct {
 	char		**args;
 	struct stat	fileInfo;
 	Elf64_Addr	*mmapPtr;
+
 	Elf64_Shdr	*elf64SectionsPtr;
 	Elf32_Shdr	*elf32SectionsPtr;
+
 	Elf64_Sym	*elf64Symtab;
+	Elf32_Sym	*elf32Symtab;
+
+	Elf64_Shdr      *elf64StrTab;
+	Elf32_Shdr      *elf32StrTab;
 
 }			nm;
 
