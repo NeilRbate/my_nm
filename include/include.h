@@ -78,6 +78,9 @@ typedef struct {
 	char		**args;
 	struct stat	fileInfo;
 	Elf64_Addr	*mmapPtr;
+	Elf64_Shdr	*elf64SectionsPtr;
+	Elf32_Shdr	*elf32SectionsPtr;
+	Elf64_Sym	*elf64Symtab;
 
 }			nm;
 
@@ -162,5 +165,24 @@ void	*memoryMap(struct stat fileInfo, int fd);
  */
 int	computeElf(nm nmFile);
 
+/*
+ * This function is used to find the dyntab on elf 32 bits file
+ * dir:
+ * 	src/elf32compute.c
+ * return value:
+ * 	success 0
+ * 	failure 1
+ */
+int	halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
+
+/*
+ * This function is used to find the dyntab on elf 64 bites file
+ * dir:
+ * 	src/elf64compute.c
+ * return value:
+ * 	success 0
+ * 	failure 1
+ */
+int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile);
 
 #endif

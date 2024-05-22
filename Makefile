@@ -1,4 +1,4 @@
-CC = clang
+CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
@@ -8,7 +8,10 @@ SRCS = src/main.c \
        src/init.c \
        src/parser.c \
        src/tools.c \
-       src/elfcompute.c
+       src/elfcompute.c \
+       src/elf32compute.c \
+       src/elf64compute.c
+
 LIBFT = -L. libft/libft.a 
 
 OBJS = ${SRCS:.c=.o}

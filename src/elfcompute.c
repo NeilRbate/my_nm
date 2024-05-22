@@ -1,6 +1,7 @@
 #include "../include/include.h"
 
 #include <stdio.h>
+
 static int	checkFormat(Elf64_Ehdr *elf_header, nm nmFile)
 {
 	if (!elf_header || !elf_header->e_type)
@@ -11,15 +12,16 @@ static int	checkFormat(Elf64_Ehdr *elf_header, nm nmFile)
 		ft_putstr_fd(nmFile.fileName, 2);
 		ft_putendl_fd(": file format not recognized", 2);
 		goto failure;
-	}
+	}	
 	//Check if file is 32 or 64 bits
-	if (elf_header->e_ident[EI_CLASS] == ELFCLASS32) {
-		printf("32 bit\n");
-		//GOTO 32 bit compute
+	if (elf_header->e_ident[EI_CLASS] && elf_header->e_ident[EI_CLASS] == ELFCLASS32) {
+		printf("32 Bits ELF detected\n");
+		if (halfCompute((Elf32_Ehdr *)elf_header, nmFile) == 1)
+			goto failure;
 	} else if (elf_header->e_ident[EI_CLASS] == ELFCLASS64) {
-		printf("64 bit\n");
-		printf("e_flag ->%lu\n", elf_header->e_entry + 2);
-		//GOTO 64 bit compute
+		printf("64 Bits ELF detected\n");
+		if (fullCompute(elf_header, nmFile) == 1)
+			goto failure;
 	}
 
 	return (0);

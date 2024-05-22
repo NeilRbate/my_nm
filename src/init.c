@@ -11,4 +11,8 @@ void	initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->nbArgs =	argc;
 	nmFile->args =		argv;
 	nmFile->mmapPtr =	NULL;
+
+	nmFile->elf64SectionsPtr = 	NULL;
+	nmFile->elf32SectionsPtr = 	NULL;
+	nmFile->elf64Symtab = 		NULL;
 }

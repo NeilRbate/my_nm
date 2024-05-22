@@ -33,7 +33,7 @@ int	main(int argc, char **argv)
 		//Open file
 		if ((nmFile.fd = openFile(argv[i])) < 0)
 			goto failure;
-		//TODO check file name for each it and do it again
+		//TODO check file name for each
 		nmFile.fileName = argv[i];
 
 		//Grab fstat info from file
@@ -46,6 +46,7 @@ int	main(int argc, char **argv)
 	
 		if (computeElf(nmFile) != 0)
 			goto clear_exit;
+
 		munmap(nmFile.mmapPtr, nmFile.fileInfo.st_size);
 	}
 

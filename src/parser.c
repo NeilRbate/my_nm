@@ -1,7 +1,7 @@
 #include "../include/include.h"
 
 
-//Control validity of option.
+//Control options
 int	optionsControl(nm *nmFile, char *arg)	
 {
 	if (ft_strncmp(arg, "-a", 3) == 0) {
@@ -40,7 +40,6 @@ int	argControl(nm *nmFile)
 			putError("a.out: No such file");
 			goto failure;
 		}
-		//Goto file check
 	} else if (nmFile->nbArgs == 2) {
 		if (ft_strlen(nmFile->args[1]) >= 2 && ft_strncmp(nmFile->args[1], "-", 1) == 0)
 			if (optionsControl(nmFile, nmFile->args[1]) == FALSE)
