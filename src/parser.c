@@ -2,7 +2,8 @@
 
 
 //Control options
-int	optionsControl(nm *nmFile, char *arg)	
+int
+optionsControl(nm *nmFile, char *arg)	
 {
 	if (ft_strncmp(arg, "-a", 3) == 0) {
 		nmFile->flags = A_OPT;
@@ -30,7 +31,8 @@ ret:
 }
 
 //Control arguments
-int	argControl(nm *nmFile)
+int
+argControl(nm *nmFile)
 {
 	if(!nmFile)
 		goto failure;

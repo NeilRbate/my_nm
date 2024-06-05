@@ -49,6 +49,11 @@
 #define TRUE	0X0000
 #define FALSE	0X1111
 
+#define SUCCESS	0
+#define FAILURE	1
+#define NOSYM	2
+
+
 #define STDOUT	1
 #define STDERR	2
 
@@ -73,10 +78,18 @@ typedef struct {
 
 	int		fd;
 	int 		nbArgs;
+	int		argndx;
 	int		flags;
+
 	char		*fileName;
 	char		**args;
+
+	size_t		symtabSize;
+	size_t		strtabSize;
+	size_t		dynsymSize;
+
 	struct stat	fileInfo;
+
 	Elf64_Addr	*mmapPtr;
 
 	Elf64_Shdr	*elf64SectionsPtr;
@@ -86,12 +99,17 @@ typedef struct {
 	Elf32_Ehdr	*elf32Ehdr;
 
 	Elf64_Sym	*elf64Symtab;
+	Elf64_Dyn	*elf64DynSymtab;
+
 	Elf32_Sym	*elf32Symtab;
+	Elf64_Dyn	*elf32DynSymtab;
 
 	Elf64_Shdr      *elf64StrTab;
+	Elf64_Shdr      *elf64DynStrTab;
 	Elf32_Shdr      *elf32StrTab;
+	Elf64_Shdr      *elf32DynStrTab;
 
-}			nm;
+} nm;
 
 /*############################FUNCTION ZONE##############################*/
 
@@ -100,21 +118,24 @@ typedef struct {
  * dir:
  * 	src/main.c
  */
-void	putError(char *errorMessage);
+void
+putError(char *errorMessage);
 
 /*
  * This function is use to send an error when an option is invalid
  * dir: 
  * 	src/main.c
  */
-void	putInvalidOption(char *option);
+void
+putInvalidOption(char *option);
 
 /*
  * This function init the struct nm on launch
  * dir:
  * 	src/init.c
  */
-void	initNmFile(nm *nmFile, int argc, char **argv);
+void
+initNmFile(nm *nmFile, int argc, char **argv);
 
 /*
  * This function control arguments (number, options, valid file..)
@@ -125,7 +146,8 @@ void	initNmFile(nm *nmFile, int argc, char **argv);
  * 	FALSE if they ar a problem on args
  * 	True if everything is ok
  */
-int	argControl(nm *nmFile);
+int
+argControl(nm *nmFile);
 
 /*
  * This function control the opening status of file
@@ -137,7 +159,8 @@ int	argControl(nm *nmFile);
  * 	-1 if some issue with the fd
  * 	fd nb if opening correctly
  */
-int	openFile(char *filename);
+int
+openFile(char *filename);
 
 /*
  * This function is used to use fstat function on open fd
@@ -150,7 +173,8 @@ int	openFile(char *filename);
  *	FALSE in failure
  *	TRUE on success		
  */
-int	fileInfo(int fd, struct stat *fileInfo);
+int
+fileInfo(int fd, struct stat *fileInfo);
 
 
 /*
@@ -162,7 +186,8 @@ int	fileInfo(int fd, struct stat *fileInfo);
  * 	??
  * 	
  */
-void	*memoryMap(struct stat fileInfo, int fd);
+void
+*memoryMap(struct stat fileInfo, int fd);
 
 /*
  * This function compute the Elf validity test and execute the nm function
@@ -172,7 +197,8 @@ void	*memoryMap(struct stat fileInfo, int fd);
  * 	success 1
  * 	failure 0
  */
-int	computeElf(nm nmFile);
+int
+computeElf(nm nmFile);
 
 /*
  * This function is used to find the dyntab on elf 32 bits file
@@ -182,7 +208,8 @@ int	computeElf(nm nmFile);
  * 	success 0
  * 	failure 1
  */
-int	halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
+int
+halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
 
 /*
  * This function is used to find the dyntab on elf 64 bites file
@@ -192,7 +219,8 @@ int	halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
  * 	success 0
  * 	failure 1
  */
-int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile);
+int
+fullCompute(Elf64_Ehdr *elf_header, nm nmFile);
 
 
 #endif

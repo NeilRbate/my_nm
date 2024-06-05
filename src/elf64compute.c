@@ -2,32 +2,18 @@
 
 #include <stdio.h>
 
-void	printSymtab(nm nmFile)
+void
+printSymtab(nm nmFile)
 {
-
-	for (size_t i = 0; i < nmFile.elf64Symtab->st_size; i++) {
-
-		printf("%s \n", "Test");
-	}
-
-
-	/*
-	if (!str) return;
-
-	for (size_t i = 0; i < nmFile.elf64Symtab->st_size / sizeof(Elf64_Sym); i++) {
-  		printf("%s\n", str + nmFile.elf64Symtab[i].st_name);
+	for (size_t i = 0; i < nmFile.symtabSize / sizeof(*nmFile.elf64Symtab); i++) {
+  		printf("%s\n", (char *)nmFile.elf64StrTab + nmFile.elf64Symtab[i].st_name);
 	}	
-	*/
+	printf("Symtab END ---------------\n");
 }
 
-int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
+int
+fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 {
-	Elf64_Shdr *shdr = NULL;
-	char *shstrtab = NULL;
-		//,*sh_name = NULL;
-	int shdroff;
-
-
 	if (elf_header->e_shoff == 0 || elf_header->e_shnum == 0)
 		goto failure;
 
@@ -37,48 +23,49 @@ int	fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 	if (!nmFile.elf64SectionsPtr)
 		goto failure;
 
-	shdroff = elf_header->e_shoff + elf_header->e_shstrndx * elf_header->e_shentsize;
-	shdr = (Elf64_Shdr *)(elf_header + shdroff);
-
-	if (!(shstrtab = malloc(shdr->sh_size)))
-		goto failure;
-
-	ft_memcpy(shstrtab, (char*)elf_header + shdroff, shdr->sh_size);
-	//sh_name = shstrtab + shdr->sh_name;
-	
-	//Check number of element in section table
 	for (size_t i = 0; i < elf_header->e_shnum; i++) {
 
-		if (i == 0)
-			continue;
-		//Find SYMTAB
-		if (nmFile.elf64SectionsPtr[i].sh_type == SHT_SYMTAB) {
-			printf("SHT_SYMTAB find ! \n");
-			nmFile.elf64Symtab = (Elf64_Sym *)((char *)nmFile.mmapPtr \
+		if (i == 0) continue;
+		switch (nmFile.elf64SectionsPtr[i].sh_type){
+
+			case SHT_SYMTAB:
+				nmFile.elf64Symtab = (Elf64_Sym *)((char *)nmFile.mmapPtr \
 					+ nmFile.elf64SectionsPtr[i].sh_offset);
-		}
-		//Find STRTAB
-		if (nmFile.elf64SectionsPtr[i].sh_type == SHT_STRTAB) {
-			printf("[%s]\n", shstrtab + nmFile.elf64SectionsPtr[i].sh_name);
+				printf("SHT_SYMTAB find !\n");
+				nmFile.symtabSize = nmFile.elf64SectionsPtr[i].sh_size;
+				continue;
 
-			if (ft_strcmp(shstrtab + nmFile.elf64SectionsPtr[i].sh_name, ".strtab") == 0) {
-
-				printf("SHT_STRTAB find ! \n");
+			case SHT_STRTAB:
 				nmFile.elf64StrTab = (Elf64_Shdr *)((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[i].sh_offset);
+				if (ft_strncmp((char *)nmFile.elf64StrTab + nmFile.elf64SectionsPtr[i].sh_name, ".shstrtab", 10) == 0) {
+					printf("SHT_SHSTRAB find !\n");
+					nmFile.strtabSize = nmFile.elf64SectionsPtr[i].sh_size;
+					continue;
+				} 
+				printf("dynstr find !\n");
+				//TODO Add address to dynstr tab and create a structure to stock it
+				continue;
 
-				//This way to get the string table value
-				printf("nmFile.elf64StrTab : %s \n", (char *) nmFile.elf64StrTab + 1);
-			}
+			case SHT_DYNSYM:
+				nmFile.elf64DynSymtab = (Elf64_Dyn *)((char *)nmFile.mmapPtr \
+					+ nmFile.elf64SectionsPtr[i].sh_offset);
+				nmFile.dynsymSize = nmFile.elf64SectionsPtr[i].sh_size;
+				printf("SHT_DYNSIM find !\n");
+				continue;
+
+			default:
+				continue;
 		}
 	}
 
-	free(shstrtab);
-	if (nmFile.elf64Symtab == NULL || nmFile.elf64StrTab == NULL)
-		goto failure;
+	if (nmFile.elf64Symtab == NULL && nmFile.flags != U_OPT) 
+		goto nosymb;
 
-	printSymtab(nmFile);
+	//printSymtab(nmFile);
 
 	return (0);
 failure:
 	return (1);
+nosymb:
+	return (2);
 }

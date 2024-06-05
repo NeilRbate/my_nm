@@ -17,7 +17,8 @@ struct Elf32_Shdr {
 };
 */
 
-int	halfCompute(Elf32_Ehdr *elf_header, nm nmFile)
+int
+halfCompute(Elf32_Ehdr *elf_header, nm nmFile)
 {
 	if (elf_header->e_shoff == 0 || elf_header->e_shnum == 0)
 		goto failure;

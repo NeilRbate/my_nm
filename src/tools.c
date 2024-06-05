@@ -1,6 +1,7 @@
 #include "../include/include.h"
 
-void	*memoryMap(struct stat fileInfo, int fd)
+void
+*memoryMap(struct stat fileInfo, int fd)
 {
 	void	*mMap = NULL;
 
@@ -13,7 +14,8 @@ void	*memoryMap(struct stat fileInfo, int fd)
 	return (mMap);
 }
 
-int	fileInfo(int fd, struct stat *fileInfo)
+int
+fileInfo(int fd, struct stat *fileInfo)
 {	
 	if (fstat(fd, fileInfo) < 0) {
 		putError("fstat failure");
@@ -31,7 +33,8 @@ failure:
 	return (FALSE);
 }
 
-int	openFile(char *filename)
+int
+openFile(char *filename)
 {
 	int	fd;
 

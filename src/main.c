@@ -1,6 +1,7 @@
 #include "../include/include.h"
 
-void	putInvalidOption(char *option)
+void
+putInvalidOption(char *option)
 {
 	ft_putstr_fd("invalid option -- '", STDERR);
 	if (option)
@@ -9,7 +10,8 @@ void	putInvalidOption(char *option)
 	ft_putendl_fd("Usage: ft_nm [option(s)] [file(s)]", STDERR);
 }
 
-void	putError(char *errorMessage)
+void
+putError(char *errorMessage)
 {
 	if (errorMessage) {
 		ft_putstr_fd("nm: ", STDERR);
@@ -17,7 +19,8 @@ void	putError(char *errorMessage)
 	}
 }
 
-int	main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	nm	nmFile;
 
@@ -35,6 +38,7 @@ int	main(int argc, char **argv)
 			goto failure;
 		//TODO check file name for each
 		nmFile.fileName = argv[i];
+		nmFile.argndx = i;
 
 		//Grab fstat info from file
 		if ((fileInfo(nmFile.fd, &nmFile.fileInfo)) == FALSE)
