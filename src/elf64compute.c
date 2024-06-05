@@ -14,13 +14,10 @@ printSymtab(nm nmFile)
 int
 fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 {
-	if (elf_header->e_shoff == 0 || elf_header->e_shnum == 0)
+	if (elf_header->e_shoff < 1 || elf_header->e_shnum < 1)
 		goto failure;
 
 	if (!(nmFile.elf64SectionsPtr = (Elf64_Shdr *)((char *)nmFile.mmapPtr + elf_header->e_shoff)))
-		goto failure;
-
-	if (!nmFile.elf64SectionsPtr)
 		goto failure;
 
 	for (size_t i = 0; i < elf_header->e_shnum; i++) {
@@ -51,9 +48,6 @@ fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 					+ nmFile.elf64SectionsPtr[i].sh_offset);
 				nmFile.dynsymSize = nmFile.elf64SectionsPtr[i].sh_size;
 				printf("SHT_DYNSIM find !\n");
-				continue;
-
-			default:
 				continue;
 		}
 	}
