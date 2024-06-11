@@ -98,13 +98,14 @@ typedef struct {
 	Elf64_Ehdr	*elf64Ehdr;
 	Elf32_Ehdr	*elf32Ehdr;
 
-	Elf64_Sym	*elf64Symtab;
-	Elf64_Dyn	*elf64DynSymtab;
+	Elf64_Shdr	*elf64Symtab;
+	Elf64_Shdr	*elf64DynSymtab;
 
-	Elf32_Sym	*elf32Symtab;
-	Elf64_Dyn	*elf32DynSymtab;
+	Elf32_Shdr	*elf32Symtab;
+	Elf64_Shdr	*elf32DynSymtab;
 
 	Elf64_Shdr      *elf64StrTab;
+	Elf64_Shdr      *elf64ShStrTab;
 	Elf64_Shdr      *elf64DynStrTab;
 	Elf32_Shdr      *elf32StrTab;
 	Elf64_Shdr      *elf32DynStrTab;
