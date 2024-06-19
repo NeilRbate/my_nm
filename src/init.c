@@ -16,13 +16,20 @@ initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->elf64SectionsPtr = 	NULL;
 	nmFile->elf32SectionsPtr = 	NULL;
 	nmFile->elf64Symtab = 		NULL;
+	nmFile->elf64Sym = 		NULL;
 	nmFile->elf64DynSymtab =	NULL;
-	nmFile->elf32Symtab = 		NULL;
+	nmFile->elf64DynSym =		NULL;
+
+	nmFile->elf32Symtab =		NULL;
+	nmFile->elf32Sym =		NULL;
 	nmFile->elf32DynSymtab = 	NULL;
+	nmFile->elf32DynSym =		NULL;
+
 	nmFile->elf64StrTab = 		NULL;
-	nmFile->elf64DynStrTab = 	NULL;
-	nmFile->elf32StrTab = 		NULL;
+	nmFile->elf64DynStrTab =	NULL;
+	nmFile->elf32StrTab =		NULL;
 	nmFile->elf32DynStrTab =	NULL;
+
 
 	nmFile->symList = 		NULL;
 }

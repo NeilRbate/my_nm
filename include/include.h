@@ -101,7 +101,9 @@ typedef struct {
 	Elf64_Sym	*elf64DynSym;
 
 	Elf32_Shdr	*elf32Symtab;
+	Elf32_Sym	*elf32Sym;
 	Elf32_Shdr	*elf32DynSymtab;
+	Elf32_Sym	*elf32DynSym;
 
 	Elf64_Shdr      *elf64StrTab;
 	Elf64_Shdr      *elf64ShStrTab;
@@ -116,7 +118,6 @@ typedef struct {
 	char		symTyp;
 	char		*symStr;
 	char		*symAddr;
-	struct symLst	*next;
 	
 } symLst;
 
@@ -230,6 +231,22 @@ halfCompute(Elf32_Ehdr *elf_header, nm nmFile);
  */
 int
 fullCompute(Elf64_Ehdr *elf_header, nm nmFile);
+
+/*
+ * This function print the symtab with nm format
+ * dir:
+ * 	src/tools.c
+ */
+void
+printSymtab(nm nmFile, int bitSize);
+
+/*
+ * This function is used to find the symbol type
+ * dir:
+ * 	src/tools.c
+ */
+char
+printType(Elf64_Sym sym, Elf64_Shdr *shdr, int bitSize);
 
 
 #endif
