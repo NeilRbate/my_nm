@@ -88,7 +88,7 @@ typedef struct {
 
 	struct stat	fileInfo;
 
-	symLst		*symList;
+	struct symLst		*symList;
 
 	Elf64_Addr	*mmapPtr;
 

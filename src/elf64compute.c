@@ -41,13 +41,17 @@ static char            printType(Elf64_Sym sym, Elf64_Shdr *shdr)
 void
 printSymtab(nm nmFile)
 {
+	//TODO Format all this informations
 	for (size_t i = 0; i < nmFile.elf64Symtab->sh_size / nmFile.elf64Symtab->sh_entsize; i++) {
 		if (i == 0)
 			continue;
-		printf("%c %s\n", 
+		printf("%lx %c %s\n", 
+				nmFile.elf64Sym[i].st_value,
 				printType(nmFile.elf64Sym[i], 
 				nmFile.elf64SectionsPtr), nmFile.symName + nmFile.elf64Sym[i].st_name);
 	}
+	//TODO Put this scope for option -D (Not in Mandatory/bonus but can be cool)
+	/*
 	for (size_t i = 0; i < nmFile.elf64DynSymtab->sh_size / nmFile.elf64DynSymtab->sh_entsize; i++) {
 		if (i == 0)
 			continue;
@@ -55,6 +59,7 @@ printSymtab(nm nmFile)
 				printType(nmFile.elf64DynSym[i],
 				nmFile.elf64SectionsPtr), nmFile.dynSymName + nmFile.elf64DynSym[i].st_name);
 	}
+	*/
 }
 
 int
@@ -76,14 +81,12 @@ fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 				nmFile.elf64Symtab = &nmFile.elf64SectionsPtr[i];
 				nmFile.elf64Sym = (Elf64_Sym *)((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[i].sh_offset);
 				nmFile.symName = ((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[nmFile.elf64SectionsPtr[i].sh_link].sh_offset);
-				printf("SHT_SYMTAB find !\n");
 				continue;
 
 			case SHT_DYNSYM:
 				nmFile.elf64DynSymtab = nmFile.elf64SectionsPtr + i;
 				nmFile.elf64DynSym = (Elf64_Sym *)((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[i].sh_offset);
 				nmFile.dynSymName = ((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[nmFile.elf64SectionsPtr[i].sh_link].sh_offset);
-				printf("SHT_DYNSIM find !\n");
 				continue;
 		}
 	}

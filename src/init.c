@@ -24,5 +24,5 @@ initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->elf32StrTab = 		NULL;
 	nmFile->elf32DynStrTab =	NULL;
 
-	nmFIle->symList = 		NULL;
+	nmFile->symList = 		NULL;
 }
