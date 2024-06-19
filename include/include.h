@@ -66,12 +66,12 @@
  *  -p
  */
 #define NO_OPT		0
-#define A_OPT		1
-#define G_OPT		2
-#define U_OPT		3
-#define R_OPT		4
-#define P_OPT		5
-#define INVALID_OPT	6
+#define A_OPT		1 << 1
+#define G_OPT		1 << 2
+#define U_OPT		1 << 3
+#define R_OPT		1 << 4
+#define P_OPT		1 << 5
+#define INVALID_OPT	1 << 6
 
 
 typedef struct {
@@ -83,6 +83,7 @@ typedef struct {
 
 	char		*fileName;
 	char		**args;
+	char		*symName;
 
 	size_t		symtabSize;
 	size_t		strtabSize;
@@ -99,6 +100,7 @@ typedef struct {
 	Elf32_Ehdr	*elf32Ehdr;
 
 	Elf64_Shdr	*elf64Symtab;
+	Elf64_Sym	*elf64Sym;
 	Elf64_Shdr	*elf64DynSymtab;
 
 	Elf32_Shdr	*elf32Symtab;

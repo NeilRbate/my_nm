@@ -2,11 +2,45 @@
 
 #include <stdio.h>
 
-char            print_type(Elf64_Sym sym, Elf64_Shdr *shdr)
+static char            printType(Elf64_Sym sym, Elf64_Shdr *shdr)
 {
   char  c;
 
-  if (ELF64_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
+  if (ELF64_ST_TYPE(sym.st_info) == STT_OBJECT && ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
+	  c = 'v';
+	  if (sym.st_shndx)
+		  c = 'V';
+  } else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
+	  c = 'w';
+	  if (sym.st_shndx)
+		  c = 'W';
+  } else if (ELF64_ST_TYPE(sym.st_info) == STT_GNU_IFUNC) {
+	  c = 'i';
+  } else if (ELF64_ST_TYPE(sym.st_info) == STT_FILE || sym.st_shndx == SHN_ABS) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'A' : 'a';
+  } else if (shdr[sym.st_shndx].sh_type == SHT_NOBITS && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE)) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'B' : 'b';
+  } else if (shdr[sym.st_shndx].sh_flags == (SHF_MERGE | SHF_STRINGS) || (!shdr[sym.st_shndx].sh_flags && sym.st_shndx)) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'N' : 'n';
+  } else if (shdr[sym.st_shndx].sh_flags & SHF_EXECINSTR) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'T' : 't';
+  } else if (shdr[sym.st_shndx].sh_flags == (SHF_WRITE | SHF_ALLOC)) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'D' : 'd';
+  } else if (shdr[sym.st_shndx].sh_flags == SHF_ALLOC) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'R' : 'r';
+  } else if (ELF64_ST_TYPE(sym.st_info) == STT_COMMON) {
+	  c = 'C';
+  } else if (!sym.st_shndx) {
+	  c = (ELF64_ST_BIND(sym.st_info) == STB_GLOBAL) ? 'U' : 'u';
+  } else {
+	  c = '?';
+  }
+  return c;
+
+
+  /*
+
+  else if (ELF64_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
     c = 'u';
   else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK)
     {
@@ -44,33 +78,17 @@ char            print_type(Elf64_Sym sym, Elf64_Shdr *shdr)
     c = '?';
   if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && c != '?')
     c += 32;
-  return c;
+    */
 }
 
 void
 printSymtab(nm nmFile)
 {
-	Elf64_Sym	*sym = (Elf64_Sym *)nmFile.elf64Symtab;
-	Elf64_Sym	*dynSym = (Elf64_Sym *)nmFile.elf64DynSymtab;
-
-	//char	*strTab = ((char *)nmFile.mmapPtr + nmFile.elf64StrTab->sh_offset);
-	//char	*dynStrTab = ((char *)nmFile.mmapPtr + nmFile.elf64DynStrTab->sh_offset);
-
 	
 	for (size_t i = 0; i < nmFile.elf64Symtab->sh_size / nmFile.elf64Symtab->sh_entsize; i++) {
-		printf("sym n:[%ld], Type: [%c]\n", i, print_type(sym[i], nmFile.elf64Symtab));
-		//printf("name %s\n", (char *)nmFile.elf64StrTab + i);
-		//printf("sym_name [%s]\n", strTab + sym[i].st_name);
-		//printf("%ld Dynsym_name [%s]\n", i,(char *)nmFile.elf64DynStrTab + dynSym[i].st_name);
-		//printf("%s", strTab + i);
+		printf("[%ld] SymType: [%c] SymName: [%s]\n", i, printType(nmFile.elf64Sym[i], nmFile.elf64Symtab), nmFile.symName + nmFile.elf64Sym[i].st_name);
 	}
 
-	for (size_t i = 0; i < nmFile.elf64DynSymtab->sh_size / nmFile.elf64DynSymtab->sh_entsize; i++) {
-		//if (dynSym[i].st_shndx == SHN_UNDEF)
-		printf("Dynsym n:[%ld], Type: [%c]\n", i, print_type(dynSym[i], nmFile.elf64DynSymtab));
-			//printf("DynSym_name [%s]\n", dynStrTab + dynSym[i].st_name);
-	}
-	printf("\nSymtab END ---------------\n");
 }
 
 int
@@ -85,12 +103,13 @@ fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 	char	*sectionsName = ((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[elf_header->e_shstrndx].sh_offset);
 
 	for (size_t i = 0; i < elf_header->e_shnum; i++) {
-		//printf("Section: [%s]\n", sectionsName + nmFile.elf64SectionsPtr[i].sh_name);
 		if (i == 0 || !nmFile.elf64SectionsPtr[i].sh_size) continue;
 		switch (nmFile.elf64SectionsPtr[i].sh_type){
 
 			case SHT_SYMTAB:
-				nmFile.elf64Symtab = nmFile.elf64SectionsPtr + i;
+				nmFile.elf64Symtab = &nmFile.elf64SectionsPtr[i];
+				nmFile.elf64Sym = (Elf64_Sym *)((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[i].sh_offset);
+				nmFile.symName = ((char *)nmFile.mmapPtr + nmFile.elf64SectionsPtr[nmFile.elf64SectionsPtr[i].sh_link].sh_offset);
 				printf("SHT_SYMTAB find !\n");
 				continue;
 
@@ -103,6 +122,9 @@ fullCompute(Elf64_Ehdr *elf_header, nm nmFile)
 					printf("DynStrtab FIND !\n");
 					nmFile.elf64DynStrTab = nmFile.elf64SectionsPtr + i;
 					continue;
+				} else if (ft_strncmp(sectionsName + nmFile.elf64SectionsPtr[i].sh_name, ".shstrtab", 10) == 0) {
+					printf("shstrtab find !\n");
+					nmFile.elf64ShStrTab = nmFile.elf64SectionsPtr + i;
 				}
 				continue;
 
