@@ -13,10 +13,6 @@ initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->args =		argv;
 	nmFile->mmapPtr =	NULL;
 
-	nmFile->symtabSize = 	0;
-	nmFile->strtabSize =	0;
-	nmFile->dynsymSize =	0;
-
 	nmFile->elf64SectionsPtr = 	NULL;
 	nmFile->elf32SectionsPtr = 	NULL;
 	nmFile->elf64Symtab = 		NULL;
@@ -27,6 +23,6 @@ initNmFile(nm *nmFile, int argc, char **argv)
 	nmFile->elf64DynStrTab = 	NULL;
 	nmFile->elf32StrTab = 		NULL;
 	nmFile->elf32DynStrTab =	NULL;
-	nmFile->elf64Ehdr = 		NULL;
-	nmFile->elf32Ehdr = 		NULL;
+
+	nmFIle->symList = 		NULL;
 }

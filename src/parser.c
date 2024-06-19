@@ -1,7 +1,5 @@
 #include "../include/include.h"
 
-
-//Control options
 int
 optionsControl(nm *nmFile, char *arg)	
 {
@@ -39,7 +37,7 @@ argControl(nm *nmFile)
 
 	if (nmFile->nbArgs < 2) {
 		if ((nmFile->fd = open("a.out", O_RDONLY)) < 0) {
-			putError("a.out: No such file");
+			putError("'a.out': No such file");
 			goto failure;
 		}
 	} else if (nmFile->nbArgs == 2) {

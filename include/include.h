@@ -66,11 +66,11 @@
  *  -p
  */
 #define NO_OPT		0
-#define A_OPT		1 << 1
-#define G_OPT		1 << 2
-#define U_OPT		1 << 3
-#define R_OPT		1 << 4
-#define P_OPT		1 << 5
+#define A_OPT		1 << 1 //-a opt, display or not symbol with a type
+#define G_OPT		1 << 2 //-g opt, display only external symbol (SHT_GLOBAL)
+#define U_OPT		1 << 3 //-u opt, display only undefined symbol ()
+#define R_OPT		1 << 4 //-r opt, reverse sort of output
+#define P_OPT		1 << 5 //-p opt, non sort output
 #define INVALID_OPT	1 << 6
 
 
@@ -84,27 +84,24 @@ typedef struct {
 	char		*fileName;
 	char		**args;
 	char		*symName;
-
-	size_t		symtabSize;
-	size_t		strtabSize;
-	size_t		dynsymSize;
+	char		*dynSymName;
 
 	struct stat	fileInfo;
+
+	symLst		*symList;
 
 	Elf64_Addr	*mmapPtr;
 
 	Elf64_Shdr	*elf64SectionsPtr;
 	Elf32_Shdr	*elf32SectionsPtr;
 
-	Elf64_Ehdr	*elf64Ehdr;
-	Elf32_Ehdr	*elf32Ehdr;
-
 	Elf64_Shdr	*elf64Symtab;
 	Elf64_Sym	*elf64Sym;
 	Elf64_Shdr	*elf64DynSymtab;
+	Elf64_Sym	*elf64DynSym;
 
 	Elf32_Shdr	*elf32Symtab;
-	Elf64_Shdr	*elf32DynSymtab;
+	Elf32_Shdr	*elf32DynSymtab;
 
 	Elf64_Shdr      *elf64StrTab;
 	Elf64_Shdr      *elf64ShStrTab;
@@ -113,6 +110,15 @@ typedef struct {
 	Elf64_Shdr      *elf32DynStrTab;
 
 } nm;
+
+typedef struct {
+
+	char		symTyp;
+	char		*symStr;
+	char		*symAddr;
+	struct symLst	*next;
+	
+} symLst;
 
 /*############################FUNCTION ZONE##############################*/
 
