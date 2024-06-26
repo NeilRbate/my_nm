@@ -1,7 +1,61 @@
 #include "../include/include.h"
 
+static int
+isSymSort(symLst *list, size_t size) 
+{
+	for (size_t i = 1; i < size - 1; i++) {
+		if (ft_strcmp(list[i].symTrimStr, list[i + 1].symTrimStr) > 0)
+			return 0;
+	}
+	return 1;
+}
+
+static char*
+cleanSymStr(char *str) 
+{
+
+
+	size_t	len = ft_strlen(str);
+
+	if (len < 1)
+		return str;
+
+	char	*mmouv = malloc(sizeof(char) * len);
+	if (!mmouv)
+		return NULL;
+	int i = 0, j = 0;
+	ft_memset(mmouv, '\0', len);
+	while (str[i]) {
+		if (str[i] != '_')
+			mmouv[j++] = ft_tolower(str[i]);
+		i++;
+	}
+	return mmouv;
+}
+
+static void
+sortSymList(symLst *list, size_t size) 
+{
+	size_t i = 1;
+
+
+	while (i < size - 1) {
+		if (isSymSort(list, size) == 1)
+			break;
+		for (size_t j = 1; j < size - 1; j++ ) {
+			if (ft_strcmp(list[j].symTrimStr, list[j + 1].symTrimStr) > 0) {
+				symLst temp = list[j];
+				list[j] = list[j + 1];
+				list[j + 1] = temp;
+			}
+		}
+		i++;
+	}
+}
+
 void
-printSymAddr(unsigned long long addr, uint bitSize, char type) {
+printSymAddr(unsigned long long addr, uint bitSize, char type) 
+{
 	
 	char	hex[17];
 	int	temp = 0, i = 16;
@@ -21,7 +75,7 @@ printSymAddr(unsigned long long addr, uint bitSize, char type) {
 		if (temp < 10)
 			temp = temp + 48;
 		else
-			temp = temp + 55;
+			temp = temp + 87;
 		hex[i--] = temp;
 		addr = addr / 16;
 	}
@@ -33,8 +87,8 @@ printSymAddr(unsigned long long addr, uint bitSize, char type) {
 		ft_printf("%c", hex[i]);
 }
 
-void
-printSymtab(nm nmFile, int bitSize)
+static void
+createSymList(symLst *list, nm nmFile, int bitSize)
 {
 	size_t	size = 0;
 
@@ -43,27 +97,91 @@ printSymtab(nm nmFile, int bitSize)
 
 	if (size < 1) return;
 
-	symLst	list[size];
 	for (size_t i = 0; i < size; i++) {
+
+		list[i].symTrimStr = NULL;
 		if (i == 0) continue;
 		
-		if (bitSize == 64) {
-			list[i].symTyp = findType64(nmFile.elf64Sym[i], nmFile.elf64SectionsPtr);
-			list[i].symStr = nmFile.symName + nmFile.elf64Sym[i].st_name;
-			list[i].symAddr = nmFile.elf64Sym[i].st_value;
-			printSymAddr(list[i].symAddr, 64, list[i].symTyp);
-		} else if (bitSize == 32) {
+		if (bitSize == 32) {
 			list[i].symTyp = findType32((Elf32_Sym)nmFile.elf32Sym[i], nmFile.elf32SectionsPtr);
 			list[i].symStr = nmFile.symName + nmFile.elf32Sym[i].st_name;
 			list[i].symAddr = nmFile.elf32Sym[i].st_value;
-			printSymAddr(list[i].symAddr, 32, list[i].symTyp);
+			list[i].symTrimStr = cleanSymStr(list[i].symStr);
+		} else {
+
+			list[i].symTyp = findType64(nmFile.elf64Sym[i], nmFile.elf64SectionsPtr);
+			list[i].symStr = nmFile.symName + nmFile.elf64Sym[i].st_name;
+			list[i].symAddr = nmFile.elf64Sym[i].st_value;
+			list[i].symTrimStr = cleanSymStr(list[i].symStr);
 		}
-		ft_printf(" %c %s\n",
-			       	list[i].symTyp,
-			       	list[i].symStr);
-
-
 	}
+}
+
+static void
+printRawSymList(symLst *list, size_t size, int bitSize)
+{
+	for (size_t i = 1; i < size; i++) {
+
+		if (bitSize == 64)
+			printSymAddr(list[i].symAddr, 64, list[i].symTyp);
+		else
+			printSymAddr(list[i].symAddr, 32, list[i].symTyp);
+		ft_printf(" %c %s\n",
+				list[i].symTyp,
+				list[i].symStr);
+		if (ft_strlen(list[i].symTrimStr) > 0)
+			free(list[i].symTrimStr);
+	}
+}
+
+static void
+printFlagSymList(symLst *list, size_t size, int bitSize, int flags)
+{
+	for (size_t i = 1; i < size; i++) {
+
+		if (flags == 0) {
+			if (list[i].symTyp != 'a') {
+				if (bitSize == 64)
+					printSymAddr(list[i].symAddr, 64, list[i].symTyp);
+				else
+					printSymAddr(list[i].symAddr, 32, list[i].symTyp);
+				ft_printf(" %c %s\n",
+					list[i].symTyp,
+					list[i].symStr);
+			}
+		}
+
+
+			if (ft_strlen(list[i].symTrimStr) > 0)
+				free(list[i].symTrimStr);
+	}
+}
+
+
+
+
+
+void
+printSymtab(nm nmFile, int bitSize)
+{
+	size_t	size = 0;
+
+	if (bitSize == 32) size = nmFile.elf32Symtab->sh_size / nmFile.elf32Symtab->sh_entsize;
+	else if (bitSize == 64) size = nmFile.elf64Symtab->sh_size / nmFile.elf64Symtab->sh_entsize;
+
+	symLst	list[size];
+	createSymList(list, nmFile, bitSize);
+
+	/*
+	nmFile.flags |= P_OPT;
+	nmFile.flags |= A_OPT;
+	*/
+	if (GET_P_FLAG(nmFile.flags) == P_OPT)
+		if (GET_A_FLAG(nmFile.flags) == A_OPT)
+			printRawSymList(list, size, bitSize);
+	sortSymList(list, size);
+	printFlagSymList(list, size, bitSize, nmFile.flags);
+
 	//TODO Put this scope for option -D (Not in Mandatory/bonus but can be cool)
 	/*
 	for (size_t i = 0; i < nmFile.elf64DynSymtab->sh_size / nmFile.elf64DynSymtab->sh_entsize; i++) {

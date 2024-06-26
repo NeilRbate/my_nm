@@ -4,19 +4,19 @@ int
 optionsControl(nm *nmFile, char *arg)	
 {
 	if (ft_strncmp(arg, "-a", 3) == 0) {
-		nmFile->flags = A_OPT;
+		nmFile->flags |= A_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg, "-g", 3) == 0) {
-		nmFile->flags = G_OPT;
+		nmFile->flags |= G_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg, "-u", 3) == 0) {
-		nmFile->flags = U_OPT;
+		nmFile->flags |= U_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg, "-r", 3) == 0) {
-		nmFile->flags = R_OPT;
+		nmFile->flags |= R_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg, "-p", 3) == 0) {
-		nmFile->flags = P_OPT;
+		nmFile->flags |= P_OPT;
 		goto ret;
 	}
 

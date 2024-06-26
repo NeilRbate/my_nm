@@ -65,6 +65,7 @@
  *  -r
  *  -p
  */
+
 #define NO_OPT		0
 #define A_OPT		1 << 1 //-a opt, display or not symbol with a type
 #define G_OPT		1 << 2 //-g opt, display only external symbol (SHT_GLOBAL)
@@ -72,6 +73,12 @@
 #define R_OPT		1 << 4 //-r opt, reverse sort of output
 #define P_OPT		1 << 5 //-p opt, non sort output
 #define INVALID_OPT	1 << 6
+
+#define GET_A_FLAG(i)   ((i) & A_OPT)
+#define GET_G_FLAG(i)   ((i) & G_OPT)
+#define GET_U_FLAG(i)   ((i) & U_OPT)
+#define GET_R_FLAG(i)   ((i) & R_OPT)
+#define GET_P_FLAG(i)   ((i) & P_OPT)
 
 
 typedef struct {
@@ -88,7 +95,7 @@ typedef struct {
 
 	struct stat	fileInfo;
 
-	struct symLst		*symList;
+	struct symLst	*symList;
 
 	Elf64_Addr	*mmapPtr;
 
@@ -117,6 +124,8 @@ typedef struct {
 
 	char		symTyp;
 	char		*symStr;
+	char		*symTrimStr;
+	int		isAllocated;
 	Elf64_Addr	symAddr;
 	
 } symLst;
