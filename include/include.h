@@ -117,7 +117,7 @@ typedef struct {
 
 	char		symTyp;
 	char		*symStr;
-	char		*symAddr;
+	Elf64_Addr	symAddr;
 	
 } symLst;
 
@@ -241,12 +241,20 @@ void
 printSymtab(nm nmFile, int bitSize);
 
 /*
- * This function is used to find the symbol type
+ * This function is used to find the symbol type on 64 bir binary
  * dir:
  * 	src/tools.c
  */
 char
-printType(Elf64_Sym sym, Elf64_Shdr *shdr, int bitSize);
+findType64(Elf64_Sym sym, Elf64_Shdr *shdr);
+
+/*
+ * This function is used to find the symbol type on 32 bit binary
+ * dir:
+ * 	src/tools.c
+ */
+char
+findType32(Elf32_Sym sym, Elf32_Shdr *shdr);
 
 
 #endif
