@@ -1,12 +1,36 @@
 #include "../include/include.h"
 
-int
-printSymAddr(unsigned long long addr, uint bitSize) {
+void
+printSymAddr(unsigned long long addr, uint bitSize, char type) {
 	
-	//TODO Create a convert classe to put number in hex
-	(void)bitSize;
-	return 32;
+	char	hex[17];
+	int	temp = 0, i = 16;
 
+	ft_memset(hex, '0', 17);
+
+	if (type == 'U' || type == 'w') {
+		if (bitSize == 64)
+			ft_printf("                ");
+		else 
+			ft_printf("        ");
+		return;
+	}
+
+	while (addr != 0) {
+		temp = addr % 16;
+		if (temp < 10)
+			temp = temp + 48;
+		else
+			temp = temp + 55;
+		hex[i--] = temp;
+		addr = addr / 16;
+	}
+	if (bitSize == 32)
+		i = 8;
+	else
+		i = 0;
+	while(i++ < 16)
+		ft_printf("%c", hex[i]);
 }
 
 void
@@ -27,12 +51,14 @@ printSymtab(nm nmFile, int bitSize)
 			list[i].symTyp = findType64(nmFile.elf64Sym[i], nmFile.elf64SectionsPtr);
 			list[i].symStr = nmFile.symName + nmFile.elf64Sym[i].st_name;
 			list[i].symAddr = nmFile.elf64Sym[i].st_value;
+			printSymAddr(list[i].symAddr, 64, list[i].symTyp);
 		} else if (bitSize == 32) {
 			list[i].symTyp = findType32((Elf32_Sym)nmFile.elf32Sym[i], nmFile.elf32SectionsPtr);
 			list[i].symStr = nmFile.symName + nmFile.elf32Sym[i].st_name;
 			list[i].symAddr = nmFile.elf32Sym[i].st_value;
+			printSymAddr(list[i].symAddr, 32, list[i].symTyp);
 		}
-		ft_printf("%d %c %s\n", printSymAddr(list[i].symAddr, 32),
+		ft_printf(" %c %s\n",
 			       	list[i].symTyp,
 			       	list[i].symStr);
 
