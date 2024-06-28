@@ -47,7 +47,7 @@ computeElf(nm nmFile)
 
 	if (!elf_header)
 		goto failure;
-
+		
 	if (checkFormat(elf_header, nmFile) != 0)
 		goto failure;
 

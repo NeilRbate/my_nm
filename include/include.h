@@ -87,6 +87,7 @@ typedef struct {
 	int 		nbArgs;
 	int		argndx;
 	int		flags;
+	int		displayNb;
 
 	char		*fileName;
 	char		**args;

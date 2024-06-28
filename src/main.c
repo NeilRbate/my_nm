@@ -31,13 +31,17 @@ main(int argc, char **argv)
 	if (argControl(&nmFile) == FALSE)
 		goto failure;
 
+	nmFile.displayNb =	0;
 	for (int i = 1; i < argc; i++) {
 
+		if (ft_strlen(argv[i]) > 0 && argv[i][0] == '-')
+			continue;
 		//Open file
 		if ((nmFile.fd = openFile(argv[i])) < 0)
 			goto failure;
 		//TODO check file name for each
-		nmFile.fileName = argv[i];
+		if (nmFile.fileName == NULL)
+			nmFile.fileName = argv[i];
 		nmFile.argndx = i;
 
 		//Grab fstat info from file
@@ -52,6 +56,9 @@ main(int argc, char **argv)
 			goto clear_exit;
 
 		munmap(nmFile.mmapPtr, nmFile.fileInfo.st_size);
+
+		//Clean struct
+		initNmFile(&nmFile, argc, argv);
 	}
 
 return (0);
