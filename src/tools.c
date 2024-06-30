@@ -128,7 +128,7 @@ printRawSymList(symLst *list, size_t size, int bitSize)
 		ft_printf(" %c %s\n",
 				list[i].symTyp,
 				list[i].symStr);
-		if (ft_strlen(list[i].symTrimStr) > 0)
+		if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
 			free(list[i].symTrimStr);
 	}
 }
@@ -136,26 +136,28 @@ printRawSymList(symLst *list, size_t size, int bitSize)
 static void
 printFlagSymList(symLst *list, size_t size, int bitSize, int flags)
 {
+	(void)flags;
 	for (size_t i = 1; i < size; i++) {
 
-		if (flags == 0) {
-			if (list[i].symTyp != 'a') {
-				if (bitSize == 64)
-					printSymAddr(list[i].symAddr, 64, list[i].symTyp);
-				else
-					printSymAddr(list[i].symAddr, 32, list[i].symTyp);
+		if (list[i].symTyp != 'a') {
+			if (bitSize == 64) {
+				printSymAddr(list[i].symAddr, 64, list[i].symTyp);
+				ft_printf(" %c %s\n",
+					list[i].symTyp,
+					list[i].symStr);
+			} else {
+				printSymAddr(list[i].symAddr, 32, list[i].symTyp);
 				ft_printf(" %c %s\n",
 					list[i].symTyp,
 					list[i].symStr);
 			}
 		}
-		if (ft_strlen(list[i].symTrimStr) > 0)
+		if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
 			free(list[i].symTrimStr);
 	}
+
+
 }
-
-
-
 
 
 void
@@ -169,15 +171,18 @@ printSymtab(nm nmFile, int bitSize)
 	symLst	list[size];
 	createSymList(list, nmFile, bitSize);
 
-	/*
-	nmFile.flags |= P_OPT;
-	nmFile.flags |= A_OPT;
-	*/
-	if (GET_P_FLAG(nmFile.flags) == P_OPT)
-		if (GET_A_FLAG(nmFile.flags) == A_OPT)
-			printRawSymList(list, size, bitSize);
-	sortSymList(list, size);
-	printFlagSymList(list, size, bitSize, nmFile.flags);
+	if (GET_P_FLAG(nmFile.flags) != P_OPT) {
+		if (GET_R_FLAG(nmFile.flags) == R_OPT) {
+			//reverse sort
+		} 
+		else {
+			sortSymList(list, size);
+		}
+	}
+	if (GET_A_FLAG(nmFile.flags) == A_OPT)
+		printRawSymList(list, size, bitSize);
+	else
+		printFlagSymList(list, size, bitSize, nmFile.flags);
 
 	//TODO Put this scope for option -D (Not in Mandatory/bonus but can be cool)
 	/*
@@ -190,7 +195,7 @@ printSymtab(nm nmFile, int bitSize)
 	}
 
 	*/
-	}
+}
 
 void
 *memoryMap(struct stat fileInfo, int fd)
