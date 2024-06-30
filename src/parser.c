@@ -8,20 +8,25 @@ optionsControl(nm *nmFile, char *arg)
 start:
 	if (!arg[i] || size < 2) 
 		return (FALSE);
-	else if (ft_strncmp(arg + i, "a", 1) == 0) {
-		nmFile->flags |= A_OPT;
+	else if (ft_strncmp(arg + i, "a", 1 ) == 0 ) {
+		if (GET_A_FLAG(nmFile->flags) != A_OPT)
+			nmFile->flags |= A_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg + i, "g", 1) == 0) {
-		nmFile->flags |= G_OPT;
+		if (GET_G_FLAG(nmFile->flags) != G_OPT)
+			nmFile->flags |= G_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg + i, "u", 1) == 0) {
-		nmFile->flags |= U_OPT;
+		if (GET_U_FLAG(nmFile->flags) != U_OPT)
+			nmFile->flags |= U_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg + i, "r", 1) == 0) {
-		nmFile->flags |= R_OPT;
+		if (GET_U_FLAG(nmFile->flags) != R_OPT)
+			nmFile->flags |= R_OPT;
 		goto ret;
 	} else if (ft_strncmp(arg + i, "p", 1) == 0) {
-		nmFile->flags |= P_OPT;
+		if (GET_P_FLAG(nmFile->flags) != P_OPT)
+			nmFile->flags |= P_OPT;
 		goto ret;
 	}
 
