@@ -184,7 +184,7 @@ printFlagSymList(symLst *list, size_t size, int bitSize, int flags)
 					list[i].symStr);
 			}
 		} else if (GET_G_FLAG(flags) == G_OPT) {
-			if (list[i].symTyp >= 'A' && list[i].symTyp <= 'Z') {
+			if ((list[i].symTyp >= 'A' && list[i].symTyp <= 'Z') || list[i].symTyp == 'w') {
 				if (bitSize == 64)
 					printSymAddr(list[i].symAddr, 64, list[i].symTyp);
 				else
