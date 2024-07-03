@@ -14,7 +14,7 @@ void
 putError(char *errorMessage)
 {
 	if (errorMessage) {
-		ft_putstr_fd("nm: ", STDERR);
+		ft_putstr_fd("ft_nm: ", STDERR);
 		ft_putendl_fd(errorMessage, STDERR);
 	}
 }
@@ -26,12 +26,13 @@ main(int argc, char **argv)
 
 	//Init nmFile structure
 	initNmFile(&nmFile, argc, argv);
+	nmFile.flags =		NO_OPT;
+	nmFile.displayNb =	0;
 
 	//Control arguments
 	if (argControl(&nmFile) == FALSE)
 		goto failure;
 
-	nmFile.displayNb =	0;
 	for (int i = 1; i < argc; i++) {
 
 		if (ft_strlen(argv[i]) > 0 && argv[i][0] == '-')
@@ -39,7 +40,7 @@ main(int argc, char **argv)
 		//Open file
 		if ((nmFile.fd = openFile(argv[i])) < 0)
 			goto failure;
-		//TODO check file name for each
+
 		if (nmFile.fileName == NULL)
 			nmFile.fileName = argv[i];
 		nmFile.argndx = i;

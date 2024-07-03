@@ -1,6 +1,6 @@
 #include "../include/include.h"
 
-int
+static int
 optionsControl(nm *nmFile, char *arg)	
 {
 	size_t	size = ft_strlen(arg);
@@ -38,11 +38,10 @@ ret:
 	i++;
 	if (arg[i])
 		goto start;
-	nmFile->displayNb++;
 	return (TRUE);
 }
 
-int
+static int
 loopArgs(nm *nmFile)
 {
 	for (int i = 1; i < nmFile->nbArgs; i++) {
@@ -50,11 +49,12 @@ loopArgs(nm *nmFile)
 			if (optionsControl(nmFile, nmFile->args[i]) == FALSE)
 				return FALSE;
 		}
+		else
+			nmFile->displayNb++;
 	}
 	return TRUE;
 }
 
-//Control arguments
 int
 argControl(nm *nmFile)
 {
