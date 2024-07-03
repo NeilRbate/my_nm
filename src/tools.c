@@ -26,7 +26,7 @@ cleanSymStr(char *str)
 	int i = 0, j = 0;
 	ft_memset(mmouv, '\0', len);
 	while (str[i]) {
-		if (str[i] != '_' && str[i] != '.')
+		if (str[i] != '_' && str[i] != '.' && str[i] != '@')
 			mmouv[j++] = ft_tolower(str[i]);
 		i++;
 	}
