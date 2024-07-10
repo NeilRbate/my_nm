@@ -10,6 +10,7 @@ isSymSort(symLst *list, size_t size)
 	return 1;
 }
 
+/*
 static char*
 cleanSymStr(char *str) 
 {
@@ -32,6 +33,7 @@ cleanSymStr(char *str)
 	}
 	return mmouv;
 }
+*/
 
 static void
 sortSymList(symLst *list, size_t size) 
@@ -139,12 +141,14 @@ createSymList(symLst *list, nm nmFile, int bitSize)
 			list[i].symTyp = findType32((Elf32_Sym)nmFile.elf32Sym[i], nmFile.elf32SectionsPtr);
 			list[i].symStr = nmFile.symName + nmFile.elf32Sym[i].st_name;
 			list[i].symAddr = nmFile.elf32Sym[i].st_value;
-			list[i].symTrimStr = cleanSymStr(list[i].symStr);
+			list[i].symTrimStr = list[i].symStr;
+			//list[i].symTrimStr = cleanSymStr(list[i].symStr);
 		} else {
 			list[i].symTyp = findType64(nmFile.elf64Sym[i], nmFile.elf64SectionsPtr);
 			list[i].symStr = nmFile.symName + nmFile.elf64Sym[i].st_name;
 			list[i].symAddr = nmFile.elf64Sym[i].st_value;
-			list[i].symTrimStr = cleanSymStr(list[i].symStr);
+			list[i].symTrimStr = list[i].symStr;
+			//list[i].symTrimStr = cleanSymStr(list[i].symStr);
 		}
 	}
 }
@@ -161,8 +165,8 @@ printRawSymList(symLst *list, size_t size, int bitSize)
 		ft_printf(" %c %s\n",
 				list[i].symTyp,
 				list[i].symStr);
-		if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
-			free(list[i].symTrimStr);
+		//if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
+		//	free(list[i].symTrimStr);
 	}
 }
 
@@ -204,8 +208,8 @@ printFlagSymList(symLst *list, size_t size, int bitSize, int flags)
 					list[i].symStr);
 
 		}
-		if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
-			free(list[i].symTrimStr);
+		//if (list[i].symTrimStr != NULL && ft_strlen(list[i].symTrimStr) > 0)
+		//	free(list[i].symTrimStr);
 	}
 }
 
