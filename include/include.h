@@ -5,9 +5,6 @@
  * Welcome to NM 42 project, this .h file contains all documentations of 
  * the code and all dependencies
  *
- * This project going to use the linux kernel coding style,
- * hope you enjoy it
- *
  */
 
 /*############################INCLUDE ZONE##############################*/
