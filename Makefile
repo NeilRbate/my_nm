@@ -2,7 +2,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-NAME = ft_nm
+NAME = my_nm
 
 SRCS = src/main.c \
        src/init.c \
